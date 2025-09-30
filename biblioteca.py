@@ -1,26 +1,65 @@
+import csv
+
+
 def carica_da_file(file_path):
     """Carica i libri dal file"""
-    # TODO
+    with open(file_path,'r') as file_biblioteca:
+        prima = file_biblioteca.readline()
+        reader = csv.reader(file_biblioteca, delimiter=',')
+        biblioteca = []
+
+        for row in reader:
+                record = {
+                    'Titolo': row[0],
+                    'Autore': row[1],
+                    'Pubblicazione': int(row[2]),
+                    'Pagine': int(row[3]),
+
+                    'Sezione': int(row[4]),
+                }
+                biblioteca.append(record)
+
+
+    return biblioteca
+
+
 
 
 def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path):
     """Aggiunge un libro nella biblioteca"""
-    # TODO
+
 
 
 def cerca_libro(biblioteca, titolo):
+
     """Cerca un libro nella biblioteca dato il titolo"""
-    # TODO
+    for dizionario in biblioteca:
+        if dizionario['Titolo'].lower() == titolo.lower():
+
+
+            return dizionario
+
+
 
 
 def elenco_libri_sezione_per_titolo(biblioteca, sezione):
     """Ordina i titoli di una data sezione della biblioteca in ordine alfabetico"""
-    # TODO
+    lista_da_ordinare = []
+    for dizionario in biblioteca:
+        if dizionario['Sezione'] == sezione:
+            lista_da_ordinare.append(dizionario)
+    lista_da_ordinare.sort(key=lambda x: x['Pubblicazione'])
+    return lista_da_ordinare
+
+
 
 
 def main():
-    biblioteca = []
+
     file_path = "biblioteca.csv"
+
+    biblioteca = carica_da_file(file_path)
+
 
     while True:
         print("\n--- MENU BIBLIOTECA ---")
@@ -34,12 +73,12 @@ def main():
 
         if scelta == "1":
             while True:
-                file_path = input("Inserisci il path del file da caricare: ").strip()
-                biblioteca = carica_da_file(file_path)
+
                 if biblioteca is not None:
                     break
 
         elif scelta == "2":
+
             if not biblioteca:
                 print("Prima carica la biblioteca da file.")
                 continue
@@ -65,7 +104,7 @@ def main():
                 print("La biblioteca è vuota.")
                 continue
 
-            titolo = input("Inserisci il titolo del libro da cercare: ").strip()
+            titolo = input("Inserisci il titolo del libro da cercare: ").strip().lower()
             risultato = cerca_libro(biblioteca, titolo)
             if risultato:
                 print(f"Libro trovato: {risultato}")
