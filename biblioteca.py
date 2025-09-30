@@ -1,24 +1,31 @@
 import csv
 
-# funzione che legge il file e lo inserisce in una lista di dizionari
 def carica_da_file(file_path):
-    """Carica i libri dal file"""
-    with open(file_path,'r') as file_biblioteca:
-        prima = file_biblioteca.readline()
-        reader = csv.reader(file_biblioteca, delimiter=',')
-        biblioteca = []
+    """Carica i libri dal file CSV in una lista di dizionari"""
+    biblioteca = []
+    try:
+        with open(file_path,'r', newline="", encoding="utf-8") as file_biblioteca:
+            prima = file_biblioteca.readline()  # legge la prima riga (intestazione)
+            reader = csv.reader(file_biblioteca, delimiter=',')
 
-        for row in reader:
-                record = {
-                    'Titolo': row[0],
-                    'Autore': row[1],
-                    'Pubblicazione': int(row[2]),
-                    'Pagine': int(row[3]),
-
-                    'Sezione': int(row[4]),
-                }
-                biblioteca.append(record)
-
+            for riga_num, row in enumerate(reader, start=2):  # parte da riga 2 perché la prima è l'intestazione
+                try:
+                    record = {
+                        'Titolo': row[0],
+                        'Autore': row[1],
+                        'Pubblicazione': int(row[2]),
+                        'Pagine': int(row[3]),
+                        'Sezione': int(row[4]),
+                    }
+                    biblioteca.append(record)
+                except IndexError:
+                    print(f"Attenzione: riga {riga_num} incompleta, saltata.")
+                except ValueError:
+                    print(f"Attenzione: riga {riga_num} contiene valori non validi, saltata.")
+    except FileNotFoundError:
+        print(f"Errore: il file {file_path} non esiste.")
+    except Exception as e:
+        print(f"Errore imprevisto: {e}")
 
     return biblioteca
 
@@ -28,11 +35,15 @@ def carica_da_file(file_path):
 def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path):
     """Aggiunge un libro nella biblioteca"""
 
-
-    nuova_riga =[titolo, autore, anno, pagine, sezione]
-    with open(file_path, mode="a", newline="", encoding="utf-8") as file_biblioteca:
-        writer= csv.writer(file_biblioteca,delimiter=',')
-        writer.writerow(nuova_riga)
+    for dizionario in biblioteca:
+        if dizionario['Titolo'] == titolo:
+            return None
+        else:
+            nuova_riga =[titolo, autore, anno, pagine, sezione]
+            with open(file_path, mode="a", newline="", encoding="utf-8") as file_biblioteca:
+                writer= csv.writer(file_biblioteca,delimiter=',')
+                writer.writerow(nuova_riga)
+                return True
 
 
 
@@ -104,7 +115,7 @@ def main():
                 continue
 
             libro = aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path)
-            if libro:
+            if libro == True:
                 print(f"Libro aggiunto con successo!")
             else:
                 print("Non è stato possibile aggiungere il libro.")
