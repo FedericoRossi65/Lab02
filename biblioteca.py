@@ -5,10 +5,10 @@ def carica_da_file(file_path):
     biblioteca = []
     try:
         with open(file_path,'r', newline="", encoding="utf-8") as file_biblioteca:
-            prima = file_biblioteca.readline()  # legge la prima riga (intestazione)
+
             reader = csv.reader(file_biblioteca, delimiter=',')
 
-            for riga_num, row in enumerate(reader, start=2):  # parte da riga 2 perché la prima è l'intestazione
+            for row in reader:
                 try:
                     record = {
                         'Titolo': row[0],
@@ -19,13 +19,13 @@ def carica_da_file(file_path):
                     }
                     biblioteca.append(record)
                 except IndexError:
-                    print(f"Attenzione: riga {riga_num} incompleta, saltata.")
+                    print(f"Attenzione errore sugli indici,riga incompleta")
                 except ValueError:
-                    print(f"Attenzione: riga {riga_num} contiene valori non validi, saltata.")
+                    print(f"Attenzione: riga contiene valori non validi")
     except FileNotFoundError:
         print(f"Errore: il file {file_path} non esiste.")
     except Exception as e:
-        print(f"Errore imprevisto: {e}")
+        print(f"Errore imprevisto")
 
     return biblioteca
 
