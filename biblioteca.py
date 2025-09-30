@@ -1,6 +1,6 @@
 import csv
 
-
+# funzione che legge il file e lo inserisce in una lista di dizionari
 def carica_da_file(file_path):
     """Carica i libri dal file"""
     with open(file_path,'r') as file_biblioteca:
@@ -29,26 +29,36 @@ def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path)
     """Aggiunge un libro nella biblioteca"""
 
 
+    nuova_riga =[titolo, autore, anno, pagine, sezione]
+    with open(file_path, mode="a", newline="", encoding="utf-8") as file_biblioteca:
+        writer= csv.writer(file_biblioteca,delimiter=',')
+        writer.writerow(nuova_riga)
+
+
+
+
+
 
 def cerca_libro(biblioteca, titolo):
 
-    """Cerca un libro nella biblioteca dato il titolo"""
+    #Ciclo che scorre i dizionari nella lista
     for dizionario in biblioteca:
-        if dizionario['Titolo'].lower() == titolo.lower():
+        if dizionario['Titolo'].lower() == titolo.lower(): # verifica che il dizionario alla voce titolo sia il titolo richiesto dall' utente
 
 
             return dizionario
 
 
 
-
+# funzione che ordina per sezione
 def elenco_libri_sezione_per_titolo(biblioteca, sezione):
-    """Ordina i titoli di una data sezione della biblioteca in ordine alfabetico"""
-    lista_da_ordinare = []
+
+    lista_da_ordinare = [] # lista dove inserisco inizialmente tutti i libri della sezione richiesta dall'utente
+    # ciclo che scorre i libri all'interno della lista e verifica che la sezione sia quella richiesta
     for dizionario in biblioteca:
         if dizionario['Sezione'] == sezione:
             lista_da_ordinare.append(dizionario)
-    lista_da_ordinare.sort(key=lambda x: x['Pubblicazione'])
+    lista_da_ordinare.sort(key=lambda x: x['Pubblicazione']) # comando che ordina la lista di libri della sezione indicata per data di pubblicazione
     return lista_da_ordinare
 
 
