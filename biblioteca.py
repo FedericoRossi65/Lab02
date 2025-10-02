@@ -1,7 +1,7 @@
 import csv
 
 def carica_da_file(file_path):
-    """Carica i libri dal file CSV in una lista di dizionari"""
+    # funzione che legge il file e lo inserisce in un lista di dizionari, utilizzando try except per gestire eventuali errori nel file
     biblioteca = []
     try:
         with open(file_path,'r', newline="", encoding="utf-8") as file_biblioteca:
@@ -19,12 +19,12 @@ def carica_da_file(file_path):
                     }
                     biblioteca.append(record)
                 except IndexError:
-                    print(f"Attenzione errore sugli indici,riga incompleta")
+                    print(f"Attenzione errore sugli indici,riga incompleta") # gestione errore sugli indici
                 except ValueError:
-                    print(f"Attenzione: riga contiene valori non validi")
-    except FileNotFoundError:
+                    print(f"Attenzione: riga contiene valori non validi")# gestione errore sui valori
+    except FileNotFoundError: # nel caso il file non esiste
         print(f"Errore: il file {file_path} non esiste.")
-    except Exception as e:
+    except Exception as e:# altro errore non previsto
         print(f"Errore imprevisto")
 
     return biblioteca
@@ -32,25 +32,25 @@ def carica_da_file(file_path):
 
 
 
-def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path):
-    """Aggiunge un libro nella biblioteca"""
+def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path):#funzione che aggiunge un libro nella biblioteca
+
 
     for dizionario in biblioteca:
         if dizionario['Titolo'] == titolo:
-            return None
+            return None # se il libro inserito esiste già
         else:
-            nuova_riga =[titolo, autore, anno, pagine, sezione]
-            with open(file_path, mode="a", newline="", encoding="utf-8") as file_biblioteca:
-                writer= csv.writer(file_biblioteca,delimiter=',')
-                writer.writerow(nuova_riga)
-                return True
+            nuova_riga =[titolo, autore, anno, pagine, sezione] # campi inseriti dall' utente
+            with open(file_path, mode="a", newline="", encoding="utf-8") as file_biblioteca: #apertura del file
+                writer= csv.writer(file_biblioteca,delimiter=',')# impostazione del file in scrittura
+                writer.writerow(nuova_riga) # scrive in coda la nuova riga
+                return True # ritorna true se il libro è stato inserito
 
 
 
 
 
 
-def cerca_libro(biblioteca, titolo):
+def cerca_libro(biblioteca, titolo):# funzione che cerca un libro scelto dall'utente
 
     #Ciclo che scorre i dizionari nella lista
     for dizionario in biblioteca:
@@ -93,20 +93,17 @@ def main():
         scelta = input("Scegli un'opzione >> ").strip()
 
         if scelta == "1":
-            while True:
+            print(biblioteca) # stampa la bibiblioteca nella sua struttura dati
 
-                if biblioteca is not None:
-                    break
-
-        elif scelta == "2":
+        elif scelta == "2": # chiama la funzione aggiungi libro
 
             if not biblioteca:
                 print("Prima carica la biblioteca da file.")
                 continue
 
-            titolo = input("Titolo del libro: ").strip()
-            autore = input("Autore: ").strip()
-            try:
+            titolo = input("Titolo del libro: ").strip() # chiede all' utente di inserire titolo
+            autore = input("Autore: ").strip() # ///// autore
+            try: # se nelle voci seguenti i valori non sono numeri da errore
                 anno = int(input("Anno di pubblicazione: ").strip())
                 pagine = int(input("Numero di pagine: ").strip())
                 sezione = int(input("Sezione: ").strip())
@@ -132,13 +129,13 @@ def main():
             else:
                 print("Libro non trovato.")
 
-        elif scelta == "4":
+        elif scelta == "4":# richiama la funzione che ordina la sezione
             if not biblioteca:
                 print("La biblioteca è vuota.")
                 continue
 
             try:
-                sezione = int(input("Inserisci numero della sezione da ordinare: ").strip())
+                sezione = int(input("Inserisci numero della sezione da ordinare: ").strip())# chiede la funzione da riondinare
             except ValueError:
                 print("Errore: inserire un valore numerico valido.")
                 continue
